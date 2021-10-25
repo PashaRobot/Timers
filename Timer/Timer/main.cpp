@@ -9,28 +9,30 @@
 #include <avr/interrupt.h>
 #include "HD44780.h"
 
-HD44780 FirstDisplay(HD44780_Display_Control_ON_OFF_ON_gc, HD44780_Entry_Mode_Set_ON_OFF_gc); 
-
 void TCD0_init()
 {
-	TCD0_PER = 0x00FF;					//задаем период таймера
-	EVSYS_CH0MUX = EVSYS_CHMUX_PORTB_PIN2_gc;
-	PORTB_PIN2CTRL = PORT_OPC_PULLUP_gc;// | PORT_ISC_LEVEL_gc;
-	PORTB_PIN3CTRL = PORT_OPC_PULLUP_gc;// | PORT_ISC_LEVEL_gc;
-	EVSYS_CH0CTRL = EVSYS_QDEN_bm | EVSYS_DIGFILT_8SAMPLES_gc;
-	TCD0_CTRLD = TC_EVACT_QDEC_gc | TC_EVSEL_CH0_gc;
-	TCD0_CTRLA = TC_CLKSEL_DIV1_gc;
+	TCD0_PER = 4199;					//задаем период таймера
+	TCD0_INTCTRLA = 3<<TC0_OVFINTLVL_gp;//задаем максимальный уровень прерывания по переполнению
+	TCD0_CTRLA = 0b00000111; //TC_CLKSEL_DIV1024_gc;	//задаем предделитель и одновременно запускаем таймер
 }
 
 int main(void)
 {
+	PORTD_DIRSET = 15;	//настроим на выход 2 линии порта
+	PORTD_OUTSET = 9;	//включим светодиод на одной стороне платы
+	
+	PMIC_CTRL = PMIC_HILVLEN_bm|PMIC_MEDLVLEN_bm|PMIC_LOLVLEN_bm; // разрешаем прерывания всех уровней
+	
+	sei();				//глобально разрешаем прерывания
 	TCD0_init();
 	
-	while (1)
+	while(1)
 	{
-		FirstDisplay.Set_X_Y(1, 1);
-		_delay_ms(1);
-		FirstDisplay.Send_Num(TCD0_CNT);
-		_delay_ms(50);
+		//Висим тут и ничего не делаем в основной программе
 	}
+}
+
+ISR(TCD0_OVF_vect)
+{
+	PORTD_OUTTGL = 15; // а светодиоды переключаем по прерыванию раз в секунду
 }
