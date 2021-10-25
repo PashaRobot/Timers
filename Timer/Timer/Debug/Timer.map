@@ -644,30 +644,30 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x29a7
+.debug_info     0x00000000     0x2935
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000     0x284f C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/XMEGAA_DFP/1.2.141/gcc/dev/atxmega16a4u/avrxmega2/crtatxmega16a4u.o
- .debug_info    0x0000284f      0x158 main.o
+ .debug_info    0x0000284f       0xe6 main.o
 
-.debug_abbrev   0x00000000     0x26dd
+.debug_abbrev   0x00000000     0x26c3
  *(.debug_abbrev)
  .debug_abbrev  0x00000000     0x262c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/XMEGAA_DFP/1.2.141/gcc/dev/atxmega16a4u/avrxmega2/crtatxmega16a4u.o
- .debug_abbrev  0x0000262c       0xb1 main.o
+ .debug_abbrev  0x0000262c       0x97 main.o
 
-.debug_line     0x00000000      0x4eb
+.debug_line     0x00000000      0x48a
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x391 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/XMEGAA_DFP/1.2.141/gcc/dev/atxmega16a4u/avrxmega2/crtatxmega16a4u.o
- .debug_line    0x00000391      0x15a main.o
+ .debug_line    0x00000391       0xf9 main.o
 
 .debug_frame    0x00000000       0x54
  *(.debug_frame)
  .debug_frame   0x00000000       0x54 main.o
 
-.debug_str      0x00000000     0x1d75
+.debug_str      0x00000000     0x1c40
  *(.debug_str)
  .debug_str     0x00000000     0x1aa8 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/XMEGAA_DFP/1.2.141/gcc/dev/atxmega16a4u/avrxmega2/crtatxmega16a4u.o
- .debug_str     0x00001aa8      0x2cd main.o
-                                0x306 (size before relaxing)
+ .debug_str     0x00001aa8      0x198 main.o
+                                0x1d1 (size before relaxing)
 
 .debug_loc      0x00000000       0x3c
  *(.debug_loc)

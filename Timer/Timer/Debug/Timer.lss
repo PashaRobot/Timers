@@ -13,19 +13,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   4 .debug_aranges 00000030  00000000  00000000  00000330  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000029a7  00000000  00000000  00000360  2**0
+  5 .debug_info   00002935  00000000  00000000  00000360  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000026dd  00000000  00000000  00002d07  2**0
+  6 .debug_abbrev 000026c3  00000000  00000000  00002c95  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000004eb  00000000  00000000  000053e4  2**0
+  7 .debug_line   0000048a  00000000  00000000  00005358  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000054  00000000  00000000  000058d0  2**2
+  8 .debug_frame  00000054  00000000  00000000  000057e4  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00001d75  00000000  00000000  00005924  2**0
+  9 .debug_str    00001c40  00000000  00000000  00005838  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    0000003c  00000000  00000000  00007699  2**0
+ 10 .debug_loc    0000003c  00000000  00000000  00007478  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000020  00000000  00000000  000076d5  2**0
+ 11 .debug_ranges 00000020  00000000  00000000  000074b4  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -173,20 +173,20 @@ Disassembly of section .text:
  210:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000214 <_Z9TCD0_initv>:
-#include <avr/io.h>
 #include <avr/interrupt.h>
 #include "HD44780.h"
 
-void TCD0_init(){
-	TCD0_PER = 1953;					//задаем период таймера
- 214:	81 ea       	ldi	r24, 0xA1	; 161
- 216:	97 e0       	ldi	r25, 0x07	; 7
+void TCD0_init()
+{
+	TCD0_PER = 4199;					//задаем период таймера
+ 214:	87 e6       	ldi	r24, 0x67	; 103
+ 216:	90 e1       	ldi	r25, 0x10	; 16
  218:	80 93 26 09 	sts	0x0926, r24	; 0x800926 <__TEXT_REGION_LENGTH__+0x7fb926>
  21c:	90 93 27 09 	sts	0x0927, r25	; 0x800927 <__TEXT_REGION_LENGTH__+0x7fb927>
 	TCD0_INTCTRLA = 3<<TC0_OVFINTLVL_gp;//задаем максимальный уровень прерывани€ по переполнению
  220:	83 e0       	ldi	r24, 0x03	; 3
  222:	80 93 06 09 	sts	0x0906, r24	; 0x800906 <__TEXT_REGION_LENGTH__+0x7fb906>
-	TCD0_CTRLA = TC_CLKSEL_DIV1024_gc;	//задаем предделитель и одновременно запускаем таймер
+	TCD0_CTRLA = 0b00000111; //TC_CLKSEL_DIV1024_gc;	//задаем предделитель и одновременно запускаем таймер
  226:	87 e0       	ldi	r24, 0x07	; 7
  228:	80 93 00 09 	sts	0x0900, r24	; 0x800900 <__TEXT_REGION_LENGTH__+0x7fb900>
  22c:	08 95       	ret
@@ -196,11 +196,11 @@ void TCD0_init(){
 
 int main(void)
 {
-	PORTD_DIRSET = 9;	//настроим на выход 2 линии порта
- 22e:	89 e0       	ldi	r24, 0x09	; 9
+	PORTD_DIRSET = 15;	//настроим на выход 2 линии порта
+ 22e:	8f e0       	ldi	r24, 0x0F	; 15
  230:	80 93 61 06 	sts	0x0661, r24	; 0x800661 <__TEXT_REGION_LENGTH__+0x7fb661>
-	PORTD_OUTSET = 8;	//включим светодиод на одной стороне платы
- 234:	88 e0       	ldi	r24, 0x08	; 8
+	PORTD_OUTSET = 9;	//включим светодиод на одной стороне платы
+ 234:	89 e0       	ldi	r24, 0x09	; 9
  236:	80 93 65 06 	sts	0x0665, r24	; 0x800665 <__TEXT_REGION_LENGTH__+0x7fb665>
 	
 	PMIC_CTRL = PMIC_HILVLEN_bm|PMIC_MEDLVLEN_bm|PMIC_LOLVLEN_bm; // разрешаем прерывани€ всех уровней
@@ -214,20 +214,20 @@ int main(void)
  246:	ff cf       	rjmp	.-2      	; 0x246 <main+0x18>
 
 00000248 <__vector_77>:
-	{
 		//¬исим тут и ничего не делаем в основной программе
 	}
 }
 
-ISR(TCD0_OVF_vect){
+ISR(TCD0_OVF_vect)
+{
  248:	1f 92       	push	r1
  24a:	0f 92       	push	r0
  24c:	0f b6       	in	r0, 0x3f	; 63
  24e:	0f 92       	push	r0
  250:	11 24       	eor	r1, r1
  252:	8f 93       	push	r24
-	PORTD_OUTTGL = 9; // а светодиоды переключаем по прерыванию раз в секунду
- 254:	89 e0       	ldi	r24, 0x09	; 9
+	PORTD_OUTTGL = 15; // а светодиоды переключаем по прерыванию раз в секунду
+ 254:	8f e0       	ldi	r24, 0x0F	; 15
  256:	80 93 67 06 	sts	0x0667, r24	; 0x800667 <__TEXT_REGION_LENGTH__+0x7fb667>
  25a:	8f 91       	pop	r24
  25c:	0f 90       	pop	r0
