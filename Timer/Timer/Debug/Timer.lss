@@ -3,27 +3,27 @@ Timer.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .text         0000023e  00000000  00000000  00000054  2**1
+  0 .text         0000024a  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  1 .data         00000000  00802000  00802000  00000292  2**0
+  1 .data         00000000  00802000  00802000  0000029e  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  2 .comment      00000030  00000000  00000000  00000292  2**0
+  2 .comment      00000030  00000000  00000000  0000029e  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000002c4  2**2
+  3 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000002d0  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000028  00000000  00000000  00000304  2**0
+  4 .debug_aranges 00000028  00000000  00000000  00000310  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000029dc  00000000  00000000  0000032c  2**0
+  5 .debug_info   000029dc  00000000  00000000  00000338  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000026c5  00000000  00000000  00002d08  2**0
+  6 .debug_abbrev 000026c5  00000000  00000000  00002d14  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000004bd  00000000  00000000  000053cd  2**0
+  7 .debug_line   000004c3  00000000  00000000  000053d9  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000034  00000000  00000000  0000588c  2**2
+  8 .debug_frame  00000034  00000000  00000000  0000589c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00001e41  00000000  00000000  000058c0  2**0
+  9 .debug_str    00001e41  00000000  00000000  000058d0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_ranges 00000018  00000000  00000000  00007701  2**0
+ 10 .debug_ranges 00000018  00000000  00000000  00007711  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -164,8 +164,8 @@ Disassembly of section .text:
  202:	cd bf       	out	0x3d, r28	; 61
  204:	d7 e2       	ldi	r29, 0x27	; 39
  206:	de bf       	out	0x3e, r29	; 62
- 208:	0e 94 1a 01 	call	0x234	; 0x234 <main>
- 20c:	0c 94 1d 01 	jmp	0x23a	; 0x23a <_exit>
+ 208:	0e 94 20 01 	call	0x240	; 0x240 <main>
+ 20c:	0c 94 23 01 	jmp	0x246	; 0x246 <_exit>
 
 00000210 <__bad_interrupt>:
  210:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
@@ -179,30 +179,35 @@ void TCD0_init()
 	PORTD_DIR = 0xF; // Настраиваем порт D на выход
  214:	8f e0       	ldi	r24, 0x0F	; 15
  216:	80 93 60 06 	sts	0x0660, r24	; 0x800660 <__TEXT_REGION_LENGTH__+0x7fb660>
-	TCD0_CCA = 97;  // Задаем период в регистр сравнения канала А 
- 21a:	81 e6       	ldi	r24, 0x61	; 97
- 21c:	90 e0       	ldi	r25, 0x00	; 0
- 21e:	80 93 28 09 	sts	0x0928, r24	; 0x800928 <__TEXT_REGION_LENGTH__+0x7fb928>
- 222:	90 93 29 09 	sts	0x0929, r25	; 0x800929 <__TEXT_REGION_LENGTH__+0x7fb929>
-	TCD0_CTRLB = TC_WGMODE_FRQ_gc | (1 << 7); // Выбираем режим генерации меандра и разрешаем использование таймером линии ввода вывода порта для генерации сигнала 
- 226:	81 e8       	ldi	r24, 0x81	; 129
- 228:	80 93 01 09 	sts	0x0901, r24	; 0x800901 <__TEXT_REGION_LENGTH__+0x7fb901>
-	TCD0_CTRLA = TC_CLKSEL_DIV1024_gc; // Запускаем таймер, задав предделитель 
- 22c:	87 e0       	ldi	r24, 0x07	; 7
- 22e:	80 93 00 09 	sts	0x0900, r24	; 0x800900 <__TEXT_REGION_LENGTH__+0x7fb900>
- 232:	08 95       	ret
+	TCD0_PER = 39999; // Задаем период в регистр периода согласно требуемой частоте
+ 21a:	8f e3       	ldi	r24, 0x3F	; 63
+ 21c:	9c e9       	ldi	r25, 0x9C	; 156
+ 21e:	80 93 26 09 	sts	0x0926, r24	; 0x800926 <__TEXT_REGION_LENGTH__+0x7fb926>
+ 222:	90 93 27 09 	sts	0x0927, r25	; 0x800927 <__TEXT_REGION_LENGTH__+0x7fb927>
+	TCD0_CCA = 4444;  // Задаем период в регистр сравнения канала А согласно требуемой скважности
+ 226:	8c e5       	ldi	r24, 0x5C	; 92
+ 228:	91 e1       	ldi	r25, 0x11	; 17
+ 22a:	80 93 28 09 	sts	0x0928, r24	; 0x800928 <__TEXT_REGION_LENGTH__+0x7fb928>
+ 22e:	90 93 29 09 	sts	0x0929, r25	; 0x800929 <__TEXT_REGION_LENGTH__+0x7fb929>
+	TCD0_CTRLB = TC_WGMODE_SINGLESLOPE_gc | (1 << 4); // Выбираем режим асимметричной ШИМ и разрешаем использование таймером линии ввода вывода порта для генерации сигнала 
+ 232:	83 e1       	ldi	r24, 0x13	; 19
+ 234:	80 93 01 09 	sts	0x0901, r24	; 0x800901 <__TEXT_REGION_LENGTH__+0x7fb901>
+	TCD0_CTRLA = TC_CLKSEL_DIV1_gc; // Запускаем таймер, задав предделитель
+ 238:	81 e0       	ldi	r24, 0x01	; 1
+ 23a:	80 93 00 09 	sts	0x0900, r24	; 0x800900 <__TEXT_REGION_LENGTH__+0x7fb900>
+ 23e:	08 95       	ret
 
-00000234 <main>:
+00000240 <main>:
 }
 
 int main(void)
 {
 	TCD0_init();
- 234:	0e 94 0a 01 	call	0x214	; 0x214 <_Z9TCD0_initv>
- 238:	ff cf       	rjmp	.-2      	; 0x238 <main+0x4>
+ 240:	0e 94 0a 01 	call	0x214	; 0x214 <_Z9TCD0_initv>
+ 244:	ff cf       	rjmp	.-2      	; 0x244 <main+0x4>
 
-0000023a <_exit>:
- 23a:	f8 94       	cli
+00000246 <_exit>:
+ 246:	f8 94       	cli
 
-0000023c <__stop_program>:
- 23c:	ff cf       	rjmp	.-2      	; 0x23c <__stop_program>
+00000248 <__stop_program>:
+ 248:	ff cf       	rjmp	.-2      	; 0x248 <__stop_program>
