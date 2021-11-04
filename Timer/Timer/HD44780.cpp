@@ -230,8 +230,9 @@ void HD44780::Send_Num(uint16_t Num)
 
 void HD44780::Send_Num(uint32_t Num)
 {
+	// Реализация с выводом нулей
 	uint8_t count = 0;
-	uint8_t ch[10];
+	uint8_t ch[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	
 	for(int i = 0; (Num) || ((!Num) & (!count)); i++)
 	{
@@ -240,7 +241,7 @@ void HD44780::Send_Num(uint32_t Num)
 		count++;
 	}
 	
-	for(int i = count - 1; i >= 0; i--)
+	for(int i = 9; i >= 0; i--)
 	{
 		Send_Data(ch[i] + 0x30);
 	}
